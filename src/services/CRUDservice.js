@@ -49,7 +49,40 @@ const getAllUser = () => {
   });
 };
 
+const getUserById = (idUser) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const user = await db.User.findOne({ where: { id: idUser } });
+      resolve(user);
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
+const updateUser = (data) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const user = await getUserById(data.id);
+      if (user) {
+        user.email = data.email;
+        user.firstName = data.firstName;
+        user.lastName = data.lastName;
+        user.address = data.address;
+        user.phoneNumber = data.phoneNumber;
+
+        await user.save();
+      }
+      resolve("Update success!!");
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
 module.exports = {
   createNewUser,
   getAllUser,
+  getUserById,
+  updateUser,
 };
