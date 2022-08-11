@@ -80,9 +80,24 @@ const updateUser = (data) => {
   });
 };
 
+const deleteUserById = (userId) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const user = await getUserById(userId);
+      if (user) {
+        await user.destroy();
+      }
+      resolve("Delete user success!!");
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
 module.exports = {
   createNewUser,
   getAllUser,
   getUserById,
   updateUser,
+  deleteUserById,
 };

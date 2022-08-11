@@ -56,7 +56,7 @@
         <td><%= dataUsers[i].lastName %></td>
         <td>
           <a href="/edit-crud?id=<%= dataUsers[i].id %>">Edit</a>
-          <button>Delete</button>
+          <a href="/delete-crud?id=<%= dataUsers[i].id %>">Delete</a>
         </td>
       </tr>
       <% } %>
