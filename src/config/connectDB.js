@@ -1,12 +1,12 @@
 const { Sequelize } = require("sequelize");
 
-const sequelize = new Sequelize("tienhai_test", "root", null, {
+const sequelize = new Sequelize("hoidanit", "root", null, {
   host: "localhost",
   dialect: "mysql",
   logging: false,
 });
 
-let connectDB = async () => {
+const connectDB = async () => {
   try {
     await sequelize.authenticate();
     console.log("Connection has been established successfully.");
