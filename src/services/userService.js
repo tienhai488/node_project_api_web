@@ -1,5 +1,6 @@
 import db from "../models/index";
 import bcrypt from "bcryptjs";
+import CRUDservice from "../services/CRUDservice";
 
 const handleUserLogin = (email, password) => {
   return new Promise(async (resolve, reject) => {
@@ -74,7 +75,85 @@ const handleGetAllUsers = (userId) => {
   });
 };
 
+const createNewUser = (data) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const check = await checkUserEmail(data.email);
+      if (check) {
+        resolve({
+          errCode: 1,
+          errMessage: "Email đã tồn tại vui lòng sử dụng email khác!",
+        });
+      } else {
+        const mess = await CRUDservice.createNewUser(data);
+        console.log(mess);
+        resolve({
+          errCode: 0,
+          errMessage: "OK",
+        });
+      }
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
+const updateUser = (data) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const user = await db.User.findOne({
+        where: { id: data.id },
+        raw: false,
+      });
+      if (!user) {
+        resolve({
+          errCode: 2,
+          errMessage: "User not found!",
+        });
+      } else {
+        user.address = data.address;
+        user.lastName = data.lastName;
+        user.firstName = data.firstName;
+        await user.save();
+        resolve({
+          errCode: 0,
+          errMessage: "OK",
+        });
+      }
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
+const deleteUser = (userId) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const user = await db.User.findOne({ where: { id: userId } });
+      if (!user) {
+        resolve({
+          errCode: 2,
+          errMessage: "User not found!",
+        });
+      } else {
+        await db.User.destroy({
+          where: { id: userId },
+        });
+        resolve({
+          errCode: 0,
+          errMessage: "OK",
+        });
+      }
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
 module.exports = {
   handleUserLogin,
   handleGetAllUsers,
+  createNewUser,
+  deleteUser,
+  updateUser,
 };
